@@ -38,7 +38,7 @@ def upload(url, path, use_proxy):
         # Wait for the cookie consent dialog and accept it
         try:
             print("Checking for cookie consent dialog...")
-            cookie_accept_button = WebDriverWait(driver, 10).until(
+            cookie_accept_button = WebDriverWait(driver, 300).until(
                 EC.element_to_be_clickable((By.ID, "CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll"))
             )
             print("Clicking cookie accept button...")
@@ -47,7 +47,7 @@ def upload(url, path, use_proxy):
             print("Cookie consent dialog not found or not clickable. Proceeding...")
                 
         print("Waiting for upload button...")
-        upload_button = WebDriverWait(driver, 20).until(
+        upload_button = WebDriverWait(driver, 300).until(
             EC.element_to_be_clickable((By.XPATH, '//*[@id="hero-section"]/div/div[1]/div/div/div[1]/button[2]'))
         )
                 
@@ -58,7 +58,7 @@ def upload(url, path, use_proxy):
         driver.execute_script("arguments[0].click();", upload_button)
                 
         print("Waiting for file input...")
-        file_input = WebDriverWait(driver, 20).until(
+        file_input = WebDriverWait(driver, 300).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type=file]'))
         )
                 
@@ -66,7 +66,7 @@ def upload(url, path, use_proxy):
         file_input.send_keys(path)
 
         # Wait for and click each checkbox
-        checkboxes = WebDriverWait(driver, 15).until(
+        checkboxes = WebDriverWait(driver, 300).until(
             EC.presence_of_all_elements_located((By.CSS_SELECTOR, "div.permissions input[type='checkbox']"))
         )
                 
@@ -80,7 +80,7 @@ def upload(url, path, use_proxy):
                 
         start_search_button_selector = "div.step.start-search button:not(.disabled)"
                 
-        start_search_button = WebDriverWait(driver, 15).until(
+        start_search_button = WebDriverWait(driver, 300).until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, start_search_button_selector))
         )
 
@@ -93,7 +93,7 @@ def upload(url, path, use_proxy):
             print("Start Search button is not displayed or enabled.")
 
         print("Waiting for face selection...")
-        faces = WebDriverWait(driver, 20).until(
+        faces = WebDriverWait(driver, 300).until(
             EC.presence_of_all_elements_located((By.CSS_SELECTOR, "div.choose-uploaded-faces div.faces button"))
         )
 
@@ -102,7 +102,7 @@ def upload(url, path, use_proxy):
             driver.execute_script("arguments[0].click();", faces[0])
 
             print("Waiting for 'Proceed to the Face Search' button to be clickable...")
-            proceed_button = WebDriverWait(driver, 20).until(
+            proceed_button = WebDriverWait(driver, 300).until(
                 EC.element_to_be_clickable((By.XPATH, "//button/span[contains(text(), 'Proceed to the Face Search')]"))
             )
 
@@ -110,6 +110,14 @@ def upload(url, path, use_proxy):
             driver.execute_script("arguments[0].click();", proceed_button)
         else:
             print("No faces found to select.")
+
+        print("Waiting for new 'Start Search' button to be clickable...")
+        new_start_search_button = WebDriverWait(driver, 300).until(
+            EC.element_to_be_clickable((By.XPATH, "//button/span[contains(text(), 'Start Search')]"))
+        )
+
+        print("Clicking new 'Start Search' button...")
+        driver.execute_script("arguments[0].click();", new_start_search_button)
 
         print("Waiting for results...")
         time.sleep(5)  # Optional: Adjust as needed based on page behavior.
@@ -119,7 +127,7 @@ def upload(url, path, use_proxy):
         print(f"Using XPath: {resultsXPATH}")
 
         try:
-            results = WebDriverWait(driver, 20).until(
+            results = WebDriverWait(driver, 300).until(
                 EC.visibility_of_element_located((By.XPATH, resultsXPATH))
             ).text
             print("Results found:", results)
